@@ -10,8 +10,11 @@
   "author": "Johnny Costantini",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
+    "formidable": "^1.0.17",
     "path": "^0.12.7",
     "supervisor": "^0.12.0"
   }
