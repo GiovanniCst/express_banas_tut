@@ -80,14 +80,13 @@ app.post('/file-upload/:year/:month', function(req, res) {
     form.on('end', function(fields, files) {
         /* Temporary location of our uploaded file */
         var temp_path = this.openedFiles[0].path;
-        console.log("Temp path: " + temp_path);
+        //console.log("Temp path: " + temp_path);
         /* The file name of the uploaded file */
         var file_name = this.openedFiles[0].name;
-        console.log("File name: " + file_name);
+        //console.log("File name: " + file_name);
         /* Location where we want to copy the uploaded file */
         var new_location = __dirname + "/uploads/";
-        console.log("Destination: " + new_location);
- 
+        //console.log("Destination: " + new_location);
         
         fs.copy(temp_path, new_location + file_name, function(err) {  
             if (err) {
@@ -101,11 +100,19 @@ app.post('/file-upload/:year/:month', function(req, res) {
 
 
 
-app.get('cookie', function(req, res){
+app.get('/cookie', function(req, res){
     res.cookie('username', 'Website User', {expire: new Date() + 10}).send('This info was sent via res.cookie(...).send');
 });
 
-// app.get('/listcookies', function)
+app.get('/listcookies', function(req, res){
+    console.log("Cookies: ", req.cookies);
+    res.send('Look in the console for cookies');
+});
+
+app.get('/deletecookies', function(req, res) {
+    res.clearCookie('username');
+    res.send('Username Cookie deleted.')
+});
 
 // MIDDLEWARE
 app.use(function(req, res) {
