@@ -55,6 +55,24 @@ app.post('/process', function(req, res) {
     res.redirect(303, '/thankyou');
 });
 
+app.get('/file-upload', function(req, res) {
+    var now = new Date();
+    res.render('file-upload', {
+        year: now.getFullYear(),
+        month: now.getMonth() });
+});
+
+app.post('/file-upload/:year/:month', function(req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, file)     {
+        if(err)
+            return res.redirect(303, '/error');
+        console.log('Received file');
+        console.log(file);
+        res.redirect(303, '/thankyou');
+    });
+});
+
 // MIDDLEWARE
 app.use(function(req, res) {
     res.type('text/html');
