@@ -98,7 +98,7 @@ app.post('/file-upload/:year/:month', function(req, res) {
     });
 });
 
-
+// Set and read cookies
 
 app.get('/cookie', function(req, res){
     res.cookie('username', 'Website User', {expire: new Date() + 10}).send('This info was sent via res.cookie(...).send');
@@ -112,6 +112,56 @@ app.get('/listcookies', function(req, res){
 app.get('/deletecookies', function(req, res) {
     res.clearCookie('username');
     res.send('Username Cookie deleted.')
+});
+
+// Set session info
+
+var session = require('express-session');
+var parseurl = require('parseurl');
+
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: credentials.cookieSecret,    
+}));
+
+app.use(function(req, res, next) {
+    var views = req.session.views;
+
+    if (!views) {
+        views = req.session.views = {};
+    }
+
+    var pathname = parseurl(req).pathname;
+    views[pathname] = (views[pathname] || 0) + 1;
+    next();
+});
+
+app.get('/viewcount', function(req, res, next) {
+    res.send('You viewed this page ' + req.session.views['/viewcount'] + ' times, thanks.')
+});
+
+app.get('/readfile', function(req, res, next) {
+    fs.readFile('./public/randomfile.txt', function(err, data) {
+        if (err) {
+            return console.error(err);
+        } 
+        res.send('The file perhaps says hello: ' + data.toString());
+    });
+});
+
+app.get('/writefile', function(req, res, next) {
+    fs.writeFile('./uploads/third_file.txt', 'Everybody says hello! =)', function(err) {
+        if(err) {
+            return console.error(err);
+        }        
+    });
+    fs.readFile('./uploads/third_file.txt', function(err, data) {
+        if (err) {
+            return console.error(err);
+        }
+        res.send('The people replied: ' + data.toString());
+    });
 });
 
 // MIDDLEWARE
